@@ -4,9 +4,31 @@ All notable changes to `phil/media-bundle` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## 0.2.1-alpha - 2026-11-24
+
+### Added
+
+- The renderings of a medium that declares how it was made carry that digital source type in their XMP,
+  `Iptc4xmpExt:DigitalSourceType`, and no other metadata, so that the marking of generated and edited media survives
+  the stripping of EXIF, GPS and the original's XMP: an `APP1` segment in JPEG, an `iTXt` chunk in PNG, an `XMP` chunk
+  in WebP and a metadata item in AVIF, written by `Application\Xmp\SourceTypeXmp` after encoding, whatever the
+  processor. A medium that declares nothing keeps renderings without metadata.
+- `Application\Contract\DeclaredSourceType`, the port of the declared types, and its adapter
+  `Infrastructure\CreationDisclosure\CreationDisclosureSourceType`, wired when `phil/creation-disclosure` is installed;
+  the optional `$sourceTypes` argument of `MediaLibrary`. A marked rendering is kept under a key of its own, so
+  declaring a type renders the formats anew.
+
+### Changed
+
+- The development requirements accept `phil/browser-security-bundle` 0.2, the minor version of its main branch and no
+  earlier one, so that the package installs on its own beside that bundle.
+- Requires the latest minor of each dependency (`doctrine/orm` 3.8, `doctrine/dbal` 4.6, `league/flysystem` 3.36,
+  `symfony/service-contracts` 3.8), and of each development requirement (`doctrine/doctrine-bundle` 3.4, `twig/twig`
+  3.31, `symfony/ux-twig-component` 3.8, `easycorp/easyadmin-bundle` 5.10, …).
+
 ## 0.2.0-alpha - 2026-11-18
 
-The next version is 0.2.0-alpha: the keys of the media, versions and collections compare byte by byte on MySQL and
+The keys of the media, versions and collections compare byte by byte on MySQL and
 MariaDB. See [Upgrading from 0.1](doc/installation.md#upgrading-from-01).
 
 ### Added
