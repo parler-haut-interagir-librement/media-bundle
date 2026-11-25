@@ -4,6 +4,35 @@ All notable changes to `phil/media-bundle` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) principles.
 
+## 0.2.2-alpha - 2026-11-25
+
+### Added
+
+- An HTML5 differential test of the SVG purifier: every image kept, sanitized then made smaller, is parsed again by
+  `Dom\HTMLDocument` inside a `div` and after a paragraph, and holds no script, no HTML element, no event handler and no
+  `javascript:` address.
+
+### Changed
+
+- The development requirements take `twig/twig` 3.31.1 or later, which fixes the advisories of its sandbox published on
+  2026-11-24.
+- The development requirements include `ergebnis/phpunit-slow-test-detector`, whose `MaximumDuration` attribute a test
+  of the AVIF writer carries, so that the dependency check passes once the package is installed on its own.
+- The development requirements take `easycorp/easyadmin-bundle` 5.10.4 or later, the release that fixes
+  GHSA-f7rw-7wx5-3c54: a link to a route, like the menu link of the explorer, passed its `routeParams` to the controller
+  of that route as arguments.
+
+### Fixed
+
+- `MediaAdmin::menuItem()` named with a collection opens the explorer on that collection: the listing reads the
+  `collection` of the `routeParams` EasyAdmin forwards when the query string names none, as EasyAdmin hands it neither
+  as a query parameter nor, since 5.10.4, as an argument.
+
+### Security
+
+- Conflicts with `easycorp/easyadmin-bundle` below 5.10.4, the release that fixes GHSA-f7rw-7wx5-3c54: an application
+  cannot install this bundle next to a vulnerable EasyAdmin, which stays optional.
+
 ## 0.2.1-alpha - 2026-11-24
 
 ### Added
@@ -25,6 +54,12 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 - Requires the latest minor of each dependency (`doctrine/orm` 3.8, `doctrine/dbal` 4.6, `league/flysystem` 3.36,
   `symfony/service-contracts` 3.8), and of each development requirement (`doctrine/doctrine-bundle` 3.4, `twig/twig`
   3.31, `symfony/ux-twig-component` 3.8, `easycorp/easyadmin-bundle` 5.10, …).
+
+### Security
+
+- The signatures of the media addresses were the HMAC under the secret itself, `%kernel.secret%` by default, which
+  other bundles keyed their own hashes with. `UrlSigner` derives its key by HKDF-SHA256 under
+  `phil_media.url_signature` (`UrlSigner::USAGE`). An address signed before the update stops working: sign it again.
 
 ## 0.2.0-alpha - 2026-11-18
 
